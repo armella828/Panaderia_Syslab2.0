@@ -1,0 +1,98 @@
+// SysLab 2.0 - Capa de Persistencia
+// Proveedor: PostgreSQL | ORM: Prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────── ENUMS ───────────────
+
+enum Rol {
+  ADMIN
+  DOCENTE
+  ESTUDIANTE
+}
+
+enum EstadoEquipo {
+  DISPONIBLE
+  EN_USO
+  MANTENIMIENTO
+  BAJA
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  FINALIZADA
+}
+
+// ─────────────── MODELOS ───────────────
+
+model Usuario {
+  id        Int       @id @default(autoincrement())
+  nombre    String    @db.VarChar(120)
+  email     String    @unique @db.VarChar(160)
+  password  String    @db.VarChar(255)
+  rol       Rol       @default(ESTUDIANTE)
+  activo    Boolean   @default(true)
+  creadoEn  DateTime  @default(now()) @map("creado_en")
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  reservas  Reserva[]
+
+  @@index([email])
+  @@map("usuarios")
+}
+
+model Laboratorio {
+  id         Int      @id @default(autoincrement())
+  codigo     String   @unique @db.VarChar(20)
+  nombre     String   @db.VarChar(120)
+  ubicacion  String   @db.VarChar(160)
+  capacidad  Int      @default(20)
+  creadoEn   DateTime @default(now()) @map("creado_en")
+
+  equipos    Equipo[]
+  reservas   Reserva[]
+
+  @@map("laboratorios")
+}
+
+model Equipo {
+  id             Int          @id @default(autoincrement())
+  codigoInterno  String       @unique @map("codigo_interno") @db.VarChar(30)
+  descripcion    String       @db.VarChar(200)
+  nucleos        Int          @default(4)
+  memoriaGb      Int          @default(8) @map("memoria_gb")
+  estado         EstadoEquipo @default(DISPONIBLE)
+  laboratorioId  Int          @map("laboratorio_id")
+
+  laboratorio    Laboratorio  @relation(fields: [laboratorioId], references: [id], onDelete: Cascade)
+
+  @@index([laboratorioId])
+  @@map("equipos")
+}
+
+model Reserva {
+  id             Int           @id @default(autoincrement())
+  motivo         String        @db.VarChar(200)
+  fechaInicio    DateTime      @map("fecha_inicio")
+  fechaFin       DateTime      @map("fecha_fin")
+  estado         EstadoReserva @default(PENDIENTE)
+  usuarioId      Int           @map("usuario_id")
+  laboratorioId  Int           @map("laboratorio_id")
+  creadoEn       DateTime      @default(now()) @map("creado_en")
+
+  usuario        Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  laboratorio    Laboratorio   @relation(fields: [laboratorioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([laboratorioId])
+  @@map("reservas")
+}
