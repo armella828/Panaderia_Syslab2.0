@@ -1,9 +1,9 @@
-# Proyecto Sistemas Paralelos — SysLab 2.0
+# Proyecto PanaderiaSyslab2.0 — Panaderia_Syslab2.0
 
 ## Descripción
 Entorno multi-contenedor (Backend, Frontend, PostgreSQL) con Prisma ORM
 e integración de agente de IA con skills y reglas propias, aplicando
-la arquitectura del sistema SysLab 2.0.
+la arquitectura del sistema Panaderia_Syslab2.0.
 
 ## Requisitos
 - Docker y Docker Compose
@@ -27,4 +27,4 @@ docker compose exec backend node prisma/seed.js
 
 ## Autor
 Isaias Edmundo Armella — RU: E115862
-Materia: Sistemas Paralelos — Docente: Ing. Elias Cassal Baldiviezo
+Materia: PanaderiaSyslab2.0 — Docente: Ing. Elias Cassal Baldiviezo

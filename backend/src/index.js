@@ -1,4 +1,4 @@
-// SysLab 2.0 - Punto de entrada del Backend
+// Panaderia_Syslab2.0 - Punto de entrada del Backend
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -15,7 +15,7 @@ app.use(express.json());
 app.get('/api/health', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ estado: 'ok', servicio: 'backend-syslab', db: 'conectada' });
+    res.json({ estado: 'ok', servicio: 'backend-panaderia', db: 'conectada' });
   } catch (e) {
     res.status(503).json({ estado: 'error', db: 'sin conexion' });
   }
@@ -61,5 +61,5 @@ app.get('/api/reservas', async (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Backend SysLab 2.0 escuchando en el puerto ${PORT}`);
+  console.log(`🚀 Backend Panaderia_Syslab2.0 escuchando en el puerto ${PORT}`);
 });

@@ -1,14 +1,14 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "Frontend SysLab 2.0 - Sistemas Paralelos",
+  "description": "Frontend Panaderia_Syslab2.0 - PanaderiaSyslab2.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
-  "keywords": ["syslab", "vite", "frontend"],
+  "keywords": ["panaderia", "vite", "frontend"],
   "author": "",
   "license": "ISC",
   "dependencies": {

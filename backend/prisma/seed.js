@@ -1,4 +1,4 @@
-// SysLab 2.0 - Script de poblado inicial (Seed)
+// Panaderia_Syslab2.0 - Script de poblado inicial (Seed)
 const { PrismaClient, Rol, EstadoEquipo, EstadoReserva } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 
@@ -11,33 +11,33 @@ async function main() {
   const passwordHash = await bcrypt.hash('123456', 10);
 
   const admin = await prisma.usuario.upsert({
-    where: { email: 'admin@syslab.edu.bo' },
+    where: { email: 'admin@panaderia.edu.bo' },
     update: {},
     create: {
-      nombre: 'Administrador SysLab',
-      email: 'admin@syslab.edu.bo',
+      nombre: 'Administrador panaderia',
+      email: 'admin@panaderia.edu.bo',
       password: passwordHash,
       rol: Rol.ADMIN,
     },
   });
 
   const docente = await prisma.usuario.upsert({
-    where: { email: 'elias.cassal@syslab.edu.bo' },
+    where: { email: 'edmundoisaias99@gmail.com' },
     update: {},
     create: {
-      nombre: 'Ing. Elias Cassal Baldiviezo',
-      email: 'elias.cassal@syslab.edu.bo',
+      nombre: 'Edmundo Isaias',
+      email: 'edmundoisaias99@gmail.com',
       password: passwordHash,
       rol: Rol.DOCENTE,
     },
   });
 
   const estudiante = await prisma.usuario.upsert({
-    where: { email: 'estudiante@syslab.edu.bo' },
+    where: { email: 'estudiante@panaderia.edu.bo' },
     update: {},
     create: {
-      nombre: 'Estudiante Sistemas Paralelos',
-      email: 'estudiante@syslab.edu.bo',
+      nombre: 'isaias edmundo ',
+      email: 'estudiante@panaderia_syslab.edu.bo',
       password: passwordHash,
       rol: Rol.ESTUDIANTE,
     },
@@ -103,7 +103,7 @@ async function main() {
           laboratorioId: labA.id,
         },
         {
-          motivo: 'Evaluacion de arquitectura SysLab 2.0',
+          motivo: 'Evaluacion de arquitectura Panaderia_Syslab2.0',
           fechaInicio: new Date('2026-09-06T14:00:00Z'),
           fechaFin: new Date('2026-09-06T16:00:00Z'),
           estado: EstadoReserva.PENDIENTE,

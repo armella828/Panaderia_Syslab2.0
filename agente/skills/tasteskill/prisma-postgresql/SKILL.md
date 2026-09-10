@@ -29,5 +29,5 @@ npx prisma studio
 ## Nota de integracion
 
 En este proyecto esta skill queda **subordinada** a las reglas de `agente/rules.md`
-y a la skill personalizada `syslab-backend/persistencia-prisma`, que restringe
+y a la skill personalizada `panaderia-backend/persistencia-prisma`, que restringe
 nomenclatura, indices y comandos permitidos.

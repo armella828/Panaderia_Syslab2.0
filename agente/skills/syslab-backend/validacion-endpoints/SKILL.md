@@ -1,8 +1,8 @@
 ---
 nombre: validacion-endpoints
-descripcion: Valida entradas, normaliza el manejo de errores y verifica los codigos de estado HTTP de la API del backend SysLab 2.0. Usar al crear endpoints nuevos o cuando la API devuelve errores poco claros.
+descripcion: Valida entradas, normaliza el manejo de errores y verifica los codigos de estado HTTP de la API del backend Panaderia_Syslab2.0. Usar al crear endpoints nuevos o cuando la API devuelve errores poco claros.
 version: 1.0.0
-autor: Grupo Sistemas Paralelos
+autor: Grupo PanaderiaSyslab2.0
 ---
 
 # Skill: Validacion y Manejo de Errores en Endpoints

@@ -1,5 +1,5 @@
 # ====================================================
-# SysLab 2.0 - Orquestacion multi-contenedor
+# Panaderia_Syslab2.0 - Orquestacion multi-contenedor
 # Servicios: db (PostgreSQL) + backend + frontend
 # ====================================================
 
@@ -7,7 +7,7 @@ services:
   # ---------------- Base de datos ----------------
   db:
     image: postgres:16-alpine
-    container_name: syslab_db
+    container_name: panaderia_db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -23,14 +23,14 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - syslab_net
+      - panaderia_net
 
   # ------------------- Backend -------------------
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: syslab_backend
+    container_name: panaderia_backend
     restart: unless-stopped
     env_file:
       - ./backend/.env
@@ -45,14 +45,14 @@ services:
       db:
         condition: service_healthy
     networks:
-      - syslab_net
+      - panaderia_net
 
   # ------------------ Frontend -------------------
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: syslab_frontend
+    container_name: panaderia_frontend
     restart: unless-stopped
     env_file:
       - ./frontend/.env
@@ -64,12 +64,12 @@ services:
     depends_on:
       - backend
     networks:
-      - syslab_net
+      - panaderia_net
 
 volumes:
   postgres_data:
     driver: local
 
 networks:
-  syslab_net:
+  panaderia_net:
     driver: bridge

@@ -22,8 +22,8 @@ function App() {
 
   return (
     <main style={{ fontFamily: 'system-ui, sans-serif', padding: '2rem', maxWidth: 900, margin: '0 auto' }}>
-      <h1>SysLab 2.0</h1>
-      <p>Practica de Despliegue de Arquitectura y Agentes de IA &mdash; Sistemas Paralelos</p>
+      <h1>Panaderia_Syslab2.0</h1>
+      <p>Practica de Despliegue de Arquitectura y Agentes de IA &mdash; PanaderiaSyslab2.0</p>
 
       <section style={{ background: '#f4f6f8', padding: '1rem', borderRadius: 8, margin: '1rem 0' }}>
         <h2 style={{ fontSize: '1.1rem' }}>Estado del Backend</h2>

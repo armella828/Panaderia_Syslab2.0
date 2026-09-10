@@ -29,5 +29,5 @@ src/
 ## Nota de integracion
 
 En este proyecto la estructura sugerida se **amplia** con las capas `services/`
-y `repositories/` exigidas por la arquitectura SysLab 2.0. Ver la skill
-personalizada `syslab-backend/arquitectura-capas`.
+y `repositories/` exigidas por la arquitectura Panaderia_Syslab2.0. Ver la skill
+personalizada `panaderia-backend/arquitectura-capas`.

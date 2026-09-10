@@ -1,9 +1,9 @@
-# Reglas del Agente de IA — Arquitectura SysLab 2.0
+# Reglas del Agente de IA — Arquitectura Panaderia_Syslab2.0
 
 > Documento normativo que gobierna el comportamiento del agente de IA al
 > generar, modificar o revisar código del **backend** y de la **capa de
 > persistencia** de este proyecto.
-> Materia: Sistemas Paralelos — Docente: Ing. Elias Cassal Baldiviezo
+> Materia: PanaderiaSyslab2.0 — Docente: Ing. Elias Cassal Baldiviezo
 
 ---
 
@@ -17,7 +17,7 @@
 
 ---
 
-## 2. Arquitectura por capas (SysLab 2.0)
+## 2. Arquitectura por capas (Panaderia_Syslab2.0)
 
 El backend respeta una separación estricta de responsabilidades. El flujo de una petición es **unidireccional**:
 

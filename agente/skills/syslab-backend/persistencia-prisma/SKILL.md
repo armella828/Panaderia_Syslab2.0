@@ -1,8 +1,8 @@
 ---
 nombre: persistencia-prisma
-descripcion: Disena y modifica el esquema de Prisma sobre PostgreSQL segun las convenciones de SysLab 2.0, y genera migraciones y scripts de seed idempotentes. Usar al agregar modelos, campos, relaciones o al poblar datos iniciales.
+descripcion: Disena y modifica el esquema de Prisma sobre PostgreSQL segun las convenciones de Panaderia_Syslab2.0, y genera migraciones y scripts de seed idempotentes. Usar al agregar modelos, campos, relaciones o al poblar datos iniciales.
 version: 1.0.0
-autor: Grupo Sistemas Paralelos
+autor: Grupo PanaderiaSyslab2.0
 ---
 
 # Skill: Persistencia con Prisma ORM

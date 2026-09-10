@@ -1,4 +1,4 @@
-# SysLab 2.0 - Imagen del Backend
+# Panaderia_Syslab2.0 - Imagen del Backend
 FROM node:20-alpine
 
 # Dependencias del sistema requeridas por Prisma (OpenSSL)

@@ -1,4 +1,4 @@
-# SysLab 2.0 - Imagen del Frontend
+# Panaderia_Syslab2.0 - Imagen del Frontend
 FROM node:20-alpine
 
 WORKDIR /app

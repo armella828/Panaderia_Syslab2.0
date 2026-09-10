@@ -1,11 +1,11 @@
 ---
 nombre: arquitectura-capas
-descripcion: Genera y valida codigo del backend respetando la separacion de capas de SysLab 2.0 (routes, controllers, services, repositories). Usar al crear un nuevo recurso o al refactorizar codigo que mezcla responsabilidades.
+descripcion: Genera y valida codigo del backend respetando la separacion de capas de Panaderia_Syslab2.0 (routes, controllers, services, repositories). Usar al crear un nuevo recurso o al refactorizar codigo que mezcla responsabilidades.
 version: 1.0.0
-autor: Grupo Sistemas Paralelos
+autor: Grupo PanaderiaSyslab2.0
 ---
 
-# Skill: Arquitectura por Capas (SysLab 2.0)
+# Skill: Arquitectura por Capas (Panaderia_Syslab2.0)
 
 ## Cuando usar esta skill
 

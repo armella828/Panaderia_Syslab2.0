@@ -1,4 +1,4 @@
-// SysLab 2.0 - Capa de Persistencia
+// Panaderia_Syslab2.0 - Capa de Persistencia
 // Proveedor: PostgreSQL | ORM: Prisma
 
 generator client {
