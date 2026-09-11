@@ -1,98 +1,232 @@
-// Panaderia_Syslab2.0 - Capa de Persistencia
-// Proveedor: PostgreSQL | ORM: Prisma
+// Panaderia_Syslab2.0 - Capa de persistencia con Prisma 7
+// Proveedor: PostgreSQL | Cliente generado: prisma-client + driver adapter pg
+// Tablas en snake_case. Todas las fechas en UTC.
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ─────────────── ENUMS ───────────────
 
-enum Rol {
-  ADMIN
-  DOCENTE
-  ESTUDIANTE
-}
-
-enum EstadoEquipo {
-  DISPONIBLE
-  EN_USO
-  MANTENIMIENTO
-  BAJA
-}
-
-enum EstadoReserva {
+enum EstadoPedido {
   PENDIENTE
-  CONFIRMADA
-  CANCELADA
-  FINALIZADA
+  CONFIRMADO
+  EN_PREPARACION
+  LISTO
+  ENTREGADO
+  CANCELADO
 }
 
-// ─────────────── MODELOS ───────────────
+enum TipoMovimiento {
+  ENTRADA
+  SALIDA
+  AJUSTE
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+  CRITICA
+}
+
+enum EstadoIncidencia {
+  REPORTADA
+  EN_DIAGNOSTICO
+  EN_REPARACION
+  RESUELTA
+  CERRADA
+  CANCELADA
+}
+
+// ─────────────── ACCESO (USUARIOS, ROLES, PERMISOS) ───────────────
+
+model Permiso {
+  id          Int     @id @default(autoincrement())
+  codigo      String  @unique @db.VarChar(60)
+  descripcion String? @db.VarChar(150)
+
+  rolPermisos RolPermiso[]
+
+  @@map("permisos")
+}
+
+model Rol {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique @db.VarChar(60)
+  descripcion String?  @db.VarChar(200)
+  activo      Boolean  @default(true)
+
+  usuarios Usuario[]
+  rolPermisos RolPermiso[]
+
+  @@map("roles")
+}
+
+model RolPermiso {
+  rolId     Int    @map("rol_id")
+  permisoId Int    @map("permiso_id")
+  rol       Rol    @relation(fields: [rolId], references: [id], onDelete: Cascade)
+  permiso   Permiso @relation(fields: [permisoId], references: [id], onDelete: Cascade)
+
+  @@id([rolId, permisoId])
+  @@map("rol_permisos")
+}
 
 model Usuario {
-  id        Int       @id @default(autoincrement())
-  nombre    String    @db.VarChar(120)
-  email     String    @unique @db.VarChar(160)
-  password  String    @db.VarChar(255)
-  rol       Rol       @default(ESTUDIANTE)
-  activo    Boolean   @default(true)
-  creadoEn  DateTime  @default(now()) @map("creado_en")
-  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+  id        Int      @id @default(autoincrement())
+  nombre    String   @db.VarChar(120)
+  correo    String   @unique @db.VarChar(160)
+  password  String   @db.VarChar(255)
+  esGlobal  Boolean  @default(false) @map("es_global")
+  activo    Boolean  @default(true)
+  rolId     Int      @map("rol_id")
+  createdAt DateTime @default(now()) @map("creado_en")
+  updatedAt DateTime @updatedAt @map("actualizado_en")
 
-  reservas  Reserva[]
+  rol                  Rol                  @relation(fields: [rolId], references: [id])
+  pedidos              Pedido[]
+  movimientos          MovimientoInventario[]
+  incidenciasReportadas Incidencia[]          @relation("IncidenciaReportada")
+  incidenciasAsignadas  Incidencia[]          @relation("IncidenciaAsignada")
 
-  @@index([email])
+  @@index([correo])
+  @@index([rolId])
   @@map("usuarios")
 }
 
-model Laboratorio {
-  id         Int      @id @default(autoincrement())
-  codigo     String   @unique @db.VarChar(20)
-  nombre     String   @db.VarChar(120)
-  ubicacion  String   @db.VarChar(160)
-  capacidad  Int      @default(20)
-  creadoEn   DateTime @default(now()) @map("creado_en")
+// ─────────────── CATÁLOGO (CATEGORÍAS, PRODUCTOS) ───────────────
 
-  equipos    Equipo[]
-  reservas   Reserva[]
+model Categoria {
+  id          Int       @id @default(autoincrement())
+  nombre      String    @unique @db.VarChar(80)
+  descripcion String?   @db.VarChar(200)
+  activo      Boolean   @default(true)
 
-  @@map("laboratorios")
+  productos Producto[]
+
+  @@map("categorias")
 }
 
-model Equipo {
-  id             Int          @id @default(autoincrement())
-  codigoInterno  String       @unique @map("codigo_interno") @db.VarChar(30)
-  descripcion    String       @db.VarChar(200)
-  nucleos        Int          @default(4)
-  memoriaGb      Int          @default(8) @map("memoria_gb")
-  estado         EstadoEquipo @default(DISPONIBLE)
-  laboratorioId  Int          @map("laboratorio_id")
+model Producto {
+  id          Int      @id @default(autoincrement())
+  codigo      String   @unique @db.VarChar(20)
+  nombre      String   @db.VarChar(120)
+  descripcion String?  @db.VarChar(255)
+  precio      Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
+  imagen      String?  @db.VarChar(255)
+  categoriaId Int      @map("categoria_id")
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("creado_en")
+  updatedAt   DateTime @updatedAt @map("actualizado_en")
 
-  laboratorio    Laboratorio  @relation(fields: [laboratorioId], references: [id], onDelete: Cascade)
+  categoria     Categoria               @relation(fields: [categoriaId], references: [id])
+  detallePedidos DetallePedido[]
+  movimientos   MovimientoInventario[]
 
-  @@index([laboratorioId])
-  @@map("equipos")
+  @@index([categoriaId])
+  @@map("productos")
 }
 
-model Reserva {
-  id             Int           @id @default(autoincrement())
-  motivo         String        @db.VarChar(200)
-  fechaInicio    DateTime      @map("fecha_inicio")
-  fechaFin       DateTime      @map("fecha_fin")
-  estado         EstadoReserva @default(PENDIENTE)
-  usuarioId      Int           @map("usuario_id")
-  laboratorioId  Int           @map("laboratorio_id")
-  creadoEn       DateTime      @default(now()) @map("creado_en")
+// ─────────────── CLIENTES ───────────────
 
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  laboratorio    Laboratorio   @relation(fields: [laboratorioId], references: [id], onDelete: Cascade)
+model Cliente {
+  id        Int     @id @default(autoincrement())
+  nombre    String  @db.VarChar(120)
+  telefono  String? @db.VarChar(30)
+  correo    String? @unique @db.VarChar(160)
+  direccion String? @db.VarChar(200)
+  activo    Boolean @default(true)
 
+  pedidos Pedido[]
+
+  @@map("clientes")
+}
+
+// ─────────────── PEDIDOS ───────────────
+
+model Pedido {
+  id            Int          @id @default(autoincrement())
+  clienteId     Int          @map("cliente_id")
+  fecha         DateTime     @default(now())
+  estado        EstadoPedido @default(PENDIENTE)
+  total         Decimal      @default(0) @db.Decimal(12, 2)
+  observaciones String?      @db.VarChar(255)
+  usuarioId     Int          @map("usuario_id")
+  createdAt     DateTime     @default(now()) @map("creado_en")
+  updatedAt     DateTime     @updatedAt @map("actualizado_en")
+
+  cliente Cliente         @relation(fields: [clienteId], references: [id])
+  usuario Usuario         @relation(fields: [usuarioId], references: [id])
+  detalle DetallePedido[]
+
+  @@index([clienteId])
   @@index([usuarioId])
-  @@index([laboratorioId])
-  @@map("reservas")
+  @@map("pedidos")
+}
+
+model DetallePedido {
+  id             Int     @id @default(autoincrement())
+  pedidoId       Int     @map("pedido_id")
+  productoId     Int     @map("producto_id")
+  cantidad       Int     @default(1)
+  precioUnitario Decimal @db.Decimal(10, 2) @map("precio_unitario")
+  subtotal       Decimal @db.Decimal(12, 2)
+
+  pedido   Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id])
+
+  @@index([pedidoId])
+  @@index([productoId])
+  @@map("detalle_pedido")
+}
+
+// ─────────────── INVENTARIO ───────────────
+
+model MovimientoInventario {
+  id              Int            @id @default(autoincrement())
+  productoId      Int            @map("producto_id")
+  tipo            TipoMovimiento
+  cantidad        Int
+  stockResultante Int            @map("stock_resultante")
+  motivo          String?        @db.VarChar(255)
+  usuarioId       Int            @map("usuario_id")
+  createdAt       DateTime       @default(now()) @map("creado_en")
+
+  producto Producto @relation(fields: [productoId], references: [id])
+  usuario  Usuario  @relation(fields: [usuarioId], references: [id])
+
+  @@index([productoId])
+  @@index([usuarioId])
+  @@map("movimientos_inventario")
+}
+
+// ─────────────── INCIDENCIAS ───────────────
+
+model Incidencia {
+  id              Int              @id @default(autoincrement())
+  codigo          String           @unique @db.VarChar(20)
+  titulo          String           @db.VarChar(150)
+  descripcion     String           @db.VarChar(500)
+  prioridad       Prioridad        @default(MEDIA)
+  estado          EstadoIncidencia @default(REPORTADA)
+  reportadoPorId  Int              @map("reportado_por_id")
+  asignadoAId     Int?             @map("asignado_a_id")
+  solucion        String?          @db.VarChar(500)
+  fechaResolucion DateTime?        @map("fecha_resolucion")
+  createdAt       DateTime         @default(now()) @map("creado_en")
+  updatedAt       DateTime         @updatedAt @map("actualizado_en")
+
+  reportadoPor Usuario  @relation("IncidenciaReportada", fields: [reportadoPorId], references: [id])
+  asignadoA    Usuario? @relation("IncidenciaAsignada", fields: [asignadoAId], references: [id])
+
+  @@index([reportadoPorId])
+  @@index([asignadoAId])
+  @@map("incidencias")
 }
