@@ -15,6 +15,9 @@ backend/prisma/migrations/
 **/prisma/migrations/
 .prisma/
 
+# Cliente Prisma generado (se regenera con: prisma generate)
+backend/src/generated/
+
 # Builds
 dist/
 build/
