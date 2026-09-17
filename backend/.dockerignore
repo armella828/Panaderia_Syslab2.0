@@ -1,6 +1,10 @@
 node_modules
-npm-debug.log
+dist
 .env
-prisma/migrations
-Dockerfile
-.dockerignore
+.env.*
+!.env.example
+*.log
+.git
+.gitignore
+backend.log
+src/generated

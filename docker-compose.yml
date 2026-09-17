@@ -1,6 +1,7 @@
 # ====================================================
-# Panaderia_Syslab2.0 - Orquestacion multi-contenedor
-# Servicios: db (PostgreSQL) + backend + frontend
+# Panaderia_Syslab2.0 - Orquestacion de PRODUCCION
+# Servicios: db (PostgreSQL) + backend + frontend (nginx)
+# Uso en Ubuntu/Docker: docker compose up -d --build
 # ====================================================
 
 services:
@@ -13,8 +14,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,15 +31,13 @@ services:
       dockerfile: Dockerfile
     container_name: panaderia_backend
     restart: unless-stopped
-    env_file:
-      - ./backend/.env
     environment:
+      PORT: "5000"
+      NODE_ENV: production
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public"
-    ports:
-      - "4000:4000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+      FRONTEND_URL: ${FRONTEND_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
     depends_on:
       db:
         condition: service_healthy
@@ -52,15 +49,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
     container_name: panaderia_frontend
     restart: unless-stopped
-    env_file:
-      - ./frontend/.env
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "${FRONTEND_PORT:-5173}:5173"
     depends_on:
       - backend
     networks:
